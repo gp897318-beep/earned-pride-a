@@ -1,7 +1,7 @@
 // One Line of Earned Pride — a quiet, earned moment of pride for someone
 // in a scene: a baker's apprentice, three years of burnt loaves, one loaf
 // that finally sings as it cools, and the old baker's nod.
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 // Top-ranked of 8 candidates against the judge brief, in the brief's own
 // order: a long effort finally landing (three years of burnt loaves); a
@@ -27,3 +27,8 @@ const out = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
 mkdirSync(out, { recursive: true });
 // A trailing newline, so the file is a well-formed text file.
 writeFileSync(`${out}/entry.txt`, LINE + "\n", "utf8");
+// Read back and confirm the file holds exactly the entry, so a silent
+// partial write can never pass as a valid entry.
+if (readFileSync(`${out}/entry.txt`, "utf8") !== LINE + "\n") {
+  throw new Error("entry.txt does not hold the exact entry line");
+}
